@@ -23,9 +23,11 @@ public partial class RestaurangBokningSystemContext : DbContext
 
     public virtual DbSet<Table> Tables { get; set; }
 
+    public virtual DbSet<Menu> Menus { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=MariaRachosPC\\SQLEXPRESS;Database=RestaurangBokningSystem;Trusted_Connection=True;TrustServerCertificate=true;");
+        => optionsBuilder.UseSqlServer("Server=OSCAR-JEREZ\\SQLEXPRESS;Database=RestaurangBokningSystem;Trusted_Connection=True;TrustServerCertificate=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -80,6 +82,26 @@ public partial class RestaurangBokningSystemContext : DbContext
 
             entity.Property(e => e.TableId).HasColumnName("TableID");
         });
+
+        modelBuilder.Entity<Menu>(entity =>
+        {
+            entity.HasKey(e => e.MenuId).HasName("PK__Menu__C99ED220");
+
+            entity.Property(e => e.MenuId)
+                .ValueGeneratedNever()
+                .HasColumnName("MenuID");
+
+            entity.Property(e => e.DishName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+
+            entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
+
+            entity.Property(e => e.Type)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+        });
+
 
         OnModelCreatingPartial(modelBuilder);
     }
