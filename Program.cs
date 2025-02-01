@@ -6,12 +6,19 @@ namespace RestaurangBokningSystem
     {
         static void Main(string[] args)
         {
+            
+
             using (var ourDatabase = new RestaurangBokningSystemContext())
             {
                 try
                 {
+
                     // Fetch and display all guests from the database
-                    var guests = ourDatabase.Guests;
+                    var guests = ourDatabase.Guests.ToList();
+                    GuestRepository guestRepository = new GuestRepository(ourDatabase);
+                    guestRepository.AddGuest();
+                    guestRepository.UpdateGuest();
+                    guestRepository.DeleteGuest();
                     Console.WriteLine("Guests:");
                     Console.WriteLine("-----------------------------------------------------");
                     foreach (var guest in guests)
