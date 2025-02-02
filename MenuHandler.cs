@@ -113,13 +113,52 @@ namespace RestaurangBokningSystem
 
         private void ViewAvailableTables()
         {
-            Console.WriteLine("\n===== Available Tables =====");
-            var tables = _context.Tables.Where(t => !t.Reservations.Any()).ToList();
-            foreach (var table in tables)
+            Console.WriteLine("\n===== Table Availability =====");
+
+            // Fetch all tables with their reservations
+            var allTables = _context.Tables.Include(t => t.Reservations).ToList();
+
+            // Check if there are any tables in the system
+            if (allTables.Count == 0)
             {
-                Console.WriteLine($"Table ID: {table.TableId}, Number: {table.TableNumber}, Capacity: {table.Capacity}");
+                Console.WriteLine("No tables found in the system.");
+                return;
+            }
+
+            // Separate tables into available and reserved lists
+            var availableTables = allTables.Where(t => !t.Reservations.Any()).ToList();
+            var reservedTables = allTables.Where(t => t.Reservations.Any()).ToList();
+
+            // Display available tables
+            Console.WriteLine("\n--- Available Tables ---");
+            if (availableTables.Count > 0)
+            {
+                foreach (var table in availableTables)
+                {
+                    Console.WriteLine($"Table ID: {table.TableId}, Number: {table.TableNumber}, Capacity: {table.Capacity}, Status: Available");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No available tables at the moment.");
+            }
+
+            // Display reserved tables
+            Console.WriteLine("\n--- Reserved Tables ---");
+            if (reservedTables.Count > 0)
+            {
+                foreach (var table in reservedTables)
+                {
+                    Console.WriteLine($"Table ID: {table.TableId}, Number: {table.TableNumber}, Capacity: {table.Capacity}, Status: Reserved");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No reserved tables at the moment.");
             }
         }
+
+
 
         private void MakeReservation()
         {
